@@ -1,0 +1,14 @@
+#服务器端口配置
+server:
+  port: 8088
+
+#数据库配置
+spring:
+  datasource:
+    username: test
+    password: bugaosuni@2020
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.105.71.177:3306/feifun?useUnicode=true&characterEncoding=UTF-8
+api: localhost:${server.port}
+
+
