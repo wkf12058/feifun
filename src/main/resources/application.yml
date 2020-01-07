@@ -8,7 +8,16 @@ spring:
     username: test
     password: bugaosuni@2020
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.105.71.177:3306/feifun?useUnicode=true&characterEncoding=UTF-8
+    #设置时区 不然数据库会比平时多8哥小时（&serverTimezone=GMT%2b8）
+    url: jdbc:mysql://47.105.71.177:3306/fun?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2b8
+
 api: localhost:${server.port}
 
+
+###日志
+logging:
+  file:
+    path: logs/
+    level.root: info
+    level.com.fun.feifun: debug
 

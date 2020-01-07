@@ -1,0 +1,117 @@
+package ${package.Controller};
+import org.springframework.web.bind.annotation.RequestMapping;
+    #if(${restControllerStyle})
+    import org.springframework.web.bind.annotation.RestController;
+    #else
+    import org.springframework.stereotype.Controller;
+    #end
+    #if(${superControllerClassPackage})
+    import ${superControllerClassPackage};
+    #end
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.${entity};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.fun.feifun.base.result.Result;
+import io.swagger.annotations.ApiOperation;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import io.swagger.annotations.Api;
+
+import java.util.List;
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@Api(value = "#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end", tags = "$!{table.comment}")
+@Slf4j
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+    #if(${superControllerClass})
+    public class ${table.controllerName} extends ${superControllerClass} {
+    #else
+    public class ${table.controllerName} {
+    #end
+
+
+    @Autowired
+    private ${table.serviceName} service;
+
+    /**
+     * 获取分页
+     */
+    @PostMapping("/page")
+    @ApiOperation(value = "获取分页信息")
+    public Result page(@RequestParam(name = "page", defaultValue = "1") int index,@RequestParam(name = "rows", defaultValue = "20") int size){
+        Page page = new Page(index,size);
+        service.page(page);
+        return Result.success(page);
+    }
+
+
+    /**
+     * 获取全部数据
+     */
+    @GetMapping("/all")
+    @ApiOperation(value = "获取全部数据")
+    public Result findAll(){
+        List<${entity}> models = service.list();
+        return Result.success(models);
+    }
+
+
+    /**
+     * 根据ID查找数据
+     */
+    @GetMapping("/find")
+    @ApiOperation(value = "查找")
+    public Result find(@RequestParam("id") Long id){
+        ${entity} ${entity} = service.getById(id);
+        if(${entity}==null){
+            return Result.err("尚未查询到此ID");
+        }
+        return Result.success(${entity});
+    }
+
+
+    /**
+     * 添加数据
+     */
+    @PostMapping(value = "/save")
+    @ApiOperation(value = "添加或者保存")
+    public Result save(@RequestBody ${entity} ${entity}){
+        if(service.saveOrUpdate(${entity})){
+         return Result.success("数据添加成功！");
+        }
+        return Result.err("数据添加成功！");
+    }
+
+
+
+/**
+ * 删除数据
+ */
+@PostMapping("/del")
+@ApiOperation(value = "删除")
+public Result deleteItems(@RequestParam("ids") List<Long> ids){
+    if(service.removeByIds(ids)){
+        return Result.success("数据删除成功！");
+        }
+        return Result.err("数据删除失败");
+    }
+}
+
+#end

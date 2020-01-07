@@ -57,5 +57,7 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> err(IReMsg reMsg) {
         return new Result<>(reMsg, null);
     }
-
+    public static <T> Result<T> err(String msg) {
+        return new Result<>(400, msg,null);
+    }
 }

@@ -54,6 +54,19 @@ public class SwaggerConfig {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo("接口文档"))
+                .groupName("全部")
+                .select()
+                .apis(RequestHandlerSelectors.any())
+//                .paths(PathSelectors.ant("/sys/**"))
+                .paths(PathSelectors.any())
+                .build();
+
+    }
+
+    @Bean(value = "sysRestApi")
+    public Docket sysRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo("接口文档"))
                 .groupName("系统")
                 .select()
                 .apis(RequestHandlerSelectors.any())
